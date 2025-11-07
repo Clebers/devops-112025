@@ -1,0 +1,17 @@
+---
+- hosts: db
+  become: yes
+  tasks:
+    - name: 'Substituir bind do mysql'
+      replace:
+        path: /etc/mysql/mariadb.conf.d/50-server.cnf
+        regexp: '127\.0\.0\.1'
+        replace: '0.0.0.0'
+      notify: RestartMysql  
+
+  handlers:
+    - name: RestartMysql
+      service:
+        name: mysql
+        state: restarted
+        enabled: yes
